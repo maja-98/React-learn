@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Counter from "./Counter";
+import CounterHooks from "./CounterHooks";
+
+
+export const ThemeContext = React.createContext()
 
 function App() {
+  const [theme, setTheme] = useState(
+    {
+    bg:'black',
+    text:'white'
+  })
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeContext.Provider value = {{ backgroundColor: theme.bg, color: theme.text }}>
+      Counter
+      <Counter initialCount = {0}/>
+      CounterHooks
+      <CounterHooks initialCount = {0}/>
+      <button onClick={() => setTheme(prevTheme =>{ 
+        console.log(prevTheme)
+        if (prevTheme.bg=== 'black'){
+          return {
+            bg:'white',
+            text:'black'
+          }
+        }
+        else{
+          return      {
+            bg:'black',
+            text:'white'
+          }
+        }
+        
+      })}>Toggle Theme</button>
+    </ThemeContext.Provider >
   );
 }
 
 export default App;
+        // if (prevTheme.bg === 'white'){
+        //   prevTheme.bg = 'black'
+        //   prevTheme.text = 'white'
+        // }
+        // else{
+        //   prevTheme.bg = 'white'
+        //   prevTheme.text = 'black'          
+        // }
+        // return prevTheme
+      // } )}
