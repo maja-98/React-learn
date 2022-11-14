@@ -8,7 +8,7 @@ export default function Recipe(props) {
   return (
     <div className='recipe'>
       <div className='recipe__header'>
-        <h3 className='recipe__title'>{name}</h3>
+        {name!=='' ? <h3 className='recipe__title'>{name}</h3> : <i className='recipe__title'>Add a Name / Delete</i>}
       </div>
       <div>
         <button className='btn btn--primary mr-1' onClick={() => handleRecipeSelect(id)}>Edit</button>
@@ -29,7 +29,7 @@ export default function Recipe(props) {
         </div>
       </div>
       <div className='recipe__row'>
-        <span className='recipe__label'>Ingredients: </span>
+        { ingredients.filter(i => i.name!=='').length !== 0 && <span className='recipe__label'>Ingredients: </span> }
         <div className='recipe__value recipe__value--intended'>
             <IngredientList ingredients={ingredients} />
         </div>

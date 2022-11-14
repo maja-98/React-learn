@@ -15,12 +15,14 @@ function App() {
 
   const [recipes, setRecipes] = useState(sampleRecipies)
   const [selectedRecipeId, setSelectedRecipeId] = useState()
-  const selectedRecipe = recipes.find(recipe => recipe.id === selectedRecipeId)
+  const [filteredRecipes,setfilteredRecipes] = useState(recipes)
   
+  const selectedRecipe = recipes.find(recipe => recipe.id === selectedRecipeId)
   useEffect(() => {
     const recipeJSON = localStorage.getItem(LOCAL_STORAGE_KEY)
 
-    if (recipeJSON != null) setRecipes(JSON.parse(recipeJSON))
+    if (recipeJSON != null) {setRecipes(JSON.parse(recipeJSON))}
+    setfilteredRecipes(JSON.parse(recipeJSON))
   },[])
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify(recipes))
@@ -29,20 +31,26 @@ function App() {
 
 
 
+  
 
   const recipeContextValue = {
     handleRecipeAdd,
     handleRecipeDelete,
     handleRecipeSelect,
     hanldeRecipeEditClose,
-    handleRecipeChange
+    handleRecipeChange,
+    handleSearch
   }
 
   function handleRecipeChange(id,recipe){
     const newRecipes = [...recipes]
     const index = newRecipes.findIndex(r => r.id === id)
     newRecipes[index] = recipe
+    const newFilteredRecipe = [...filteredRecipes]
+    const filteredIndex = newFilteredRecipe.findIndex(r => r.id ===id)
+    newFilteredRecipe[filteredIndex] = recipe
     setRecipes(newRecipes)
+    setfilteredRecipes(newFilteredRecipe)
   }
 
   function handleRecipeAdd(){
@@ -63,6 +71,7 @@ function App() {
     }
     else{
       setRecipes([...recipes, NewRecipe])
+      setfilteredRecipes([...filteredRecipes,NewRecipe])
       setSelectedRecipeId(NewRecipe.id)
     }
   }
@@ -72,6 +81,7 @@ function App() {
       setSelectedRecipeId(undefined)
     } 
     setRecipes(recipes.filter(recipe => recipe.id !== id))
+    setfilteredRecipes(filteredRecipes.filter(recipe => recipe.id !== id))
     
   }
   function handleRecipeSelect(id){
@@ -80,9 +90,19 @@ function App() {
   function hanldeRecipeEditClose(){
     setSelectedRecipeId(undefined)
   }
+  function handleSearch(value){
+    if (!value){
+      setfilteredRecipes(recipes)
+    }
+    else{
+      
+      const newRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(value.toLowerCase()))
+      setfilteredRecipes(newRecipes)
+    }
+  }
   return ( 
     <RecipeContext.Provider value = {recipeContextValue}>
-      <RecipeList recipies = {recipes} />
+      <RecipeList recipies = {filteredRecipes} />
       {selectedRecipe && <RecipeEdit recipe= {selectedRecipe}/>}
     </RecipeContext.Provider>
   );

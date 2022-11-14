@@ -9,3 +9,17 @@
     padding-top: 30px;
     padding-bottom: 30px;
 }
+.recipe-list__search-container{
+    width: 50%;
+    border: 1px solid black;
+    padding: 5px;
+}
+.recipe-list__search-label{
+    padding-right: 10px;
+}
+.recipe-list__search-input{
+    border-radius: 5px;
+    padding: 5px;
+    width: 50%;
+    font-size: inherit;
+}
